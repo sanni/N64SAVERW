@@ -17,15 +17,15 @@ PROG_NAME = N64SAVERW
 
 OBJS = main.o neo_2.o disk_io.o ram_io.o neo_2_asm.o N64FlashRAM.o N64SRAM.o utils.o 
 
-$(PROG_NAME).z64: $(PROG_NAME).elf
+$(PROG_NAME).v64: $(PROG_NAME).elf
 	$(OBJCOPY) $(PROG_NAME).elf $(PROG_NAME).bin -O binary
-	$(N64TOOL) -l 2M -t "N64 Myth SAVE RW" -h $(HEADERPATH)/$(HEADERNAME) -o $(PROG_NAME).z64 $(PROG_NAME).bin
-	$(CHKSUM64PATH) $(PROG_NAME).z64
+	$(N64TOOL) -b -l 2M -t "N64 Myth SAVE RW" -h $(HEADERPATH)/$(HEADERNAME) -o $(PROG_NAME).v64 $(PROG_NAME).bin
+	$(CHKSUM64PATH) $(PROG_NAME).v64
 
 $(PROG_NAME).elf : $(OBJS)
 	$(LD) -o $(PROG_NAME).elf $(OBJS) $(LINK_FLAGS)
 
-all: $(PROG_NAME).z64
+all: $(PROG_NAME).v64
 
 N64FlashRAM.o : lib/N64FlashRAM.c lib/N64FlashRAM.h
 	${CC} ${CFLAGS} -c lib/N64FlashRAM.c
@@ -37,4 +37,4 @@ utils.o : lib/utils.c lib/utils.h
 	${CC} ${CFLAGS} -c lib/utils.c
 
 clean:
-	rm -f *.z64 *.elf *.o *.bin
+	rm -f *.v64 *.elf *.o *.bin
